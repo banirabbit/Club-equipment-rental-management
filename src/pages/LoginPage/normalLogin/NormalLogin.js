@@ -7,9 +7,20 @@ import LoginPasswdInput from "../../../components/LoginPasswdInput";
 import { useState } from "react";
 import LoginButton from "../../../components/LoginButton";
 import { spacing } from "@mui/system";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 export default function NormalLogin() {
   const [name, setName] = useState();
   const [password, setPassword] = useState();
+  // const navigate = useNavigate();
+  // const selector = (state) => {
+  //   return {
+  //     // ifFirst: state.Login.ifFirst,
+  //     // errMsg: state.Login.errorMsg,
+  //     isAuthenticated: state.Login.isAuthenticated,
+  //   };
+  // };
+  // const { isAuthenticated } = useSelector(selector);
   const bcgStyle = {
     position: "relative",
     width: "100%",
@@ -29,52 +40,72 @@ export default function NormalLogin() {
     boxShadow: "2px 2px 10px rgb(21, 28, 112)",
     textAlign: "center",
   };
+  // const handleLogin = () => {
+  //   if(isAuthenticated) {
+  //     navigate("/hit/auth/index");
+  //   }
+  // }
+  const handleSubmit = () => {};
   return (
     <Box style={bcgStyle}>
-      <Box sx={{
-        position: "absolute",
-        top: "200px",
-        left: "270px",
-      }}>
-        <Typography fontSize="50px" lineHeight="55px" color="#fff" fontWeight="600">
+      <Box
+        sx={{
+          position: "absolute",
+          top: "200px",
+          left: "270px",
+        }}
+      >
+        <Typography
+          fontSize="50px"
+          lineHeight="55px"
+          color="#fff"
+          fontWeight="600"
+        >
           Lease
         </Typography>
-        <Typography fontSize="50px" lineHeight="55px" color="#fff" fontWeight="600">
+        <Typography
+          fontSize="50px"
+          lineHeight="55px"
+          color="#fff"
+          fontWeight="600"
+        >
           办公用品租赁平台
         </Typography>
       </Box>
       <Card style={outContainerStyle}>
-        <Box mt="20px">
-          <div>
-            <Typography fontSize="34px" lineHeight="110px">
-              密码登录
-            </Typography>
-          </div>
-          <Box mb={1}>
-            <LoginNameInput
-              id="login-name-input"
-              label="账号"
-              placeholder="请输入账号"
-              value={name}
-              onchange={(value) => setName(value)}
-            ></LoginNameInput>
-          </Box>
-          <div>
-            <LoginPasswdInput
-              id="login-name-input"
-              label="密码"
-              placeholder="请输入密码"
-              value={password}
-              onchange={(value) => setPassword(value)}
-            ></LoginPasswdInput>
-          </div>
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
+          <Box mt="20px">
+            <div>
+              <Typography fontSize="34px" lineHeight="110px">
+                密码登录
+              </Typography>
+            </div>
+            <Box mb={1}>
+              <LoginNameInput
+                id="login-name-input"
+                label="账号"
+                placeholder="请输入账号"
+                value={name}
+                onchange={(value) => setName(value)}
+              ></LoginNameInput>
+            </Box>
+            <div>
+              <LoginPasswdInput
+                id="login-name-input"
+                label="密码"
+                placeholder="请输入密码"
+                value={password}
+                onchange={(value) => setPassword(value)}
+              ></LoginPasswdInput>
+            </div>
 
-          <LoginButton></LoginButton>
-          <Box sx={{ "& button": { m: 1 } }} spacing={2}>
-            <Button href="#">注册账号</Button>
-            <Button href="#">找回密码</Button>
+            <LoginButton></LoginButton>
+            <Box sx={{ "& button": { m: 1 } }} spacing={2}>
+              <Button href="#">注册账号</Button>
+              <Button href="#">找回密码</Button>
+            </Box>
           </Box>
-        </Box>
+        </form>
       </Card>
     </Box>
   );
