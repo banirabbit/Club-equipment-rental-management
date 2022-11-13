@@ -1,13 +1,12 @@
 import React from 'react'
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import loginPage from '../pages/LoginPage/login';
-export default function myRoute() {
+import NormalLogin from '../pages/LoginPage/normalLogin/NormalLogin';
+import MainPage from '../pages/mainPage';
+export default function MyRoute() {
   return (
     <Routes>
-      <Route path="*" element={<Navigate replace to="" />} />
-      <Route path="">
-      <Route path="login" element={<LoginPage />} />
-      </Route>
+      <Route path="*" element={<Navigate replace to="/login" />} />
+      <Route path="/login" element={<NormalLogin />} />
     </Routes>
   )
 }

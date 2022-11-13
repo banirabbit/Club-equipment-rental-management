@@ -4,12 +4,22 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Router } from "react-router-dom";
+import { composeWithDevTools } from "redux-devtools-extension";
+import rootReducer from "./reducer";
+import { applyMiddleware, createStore } from "redux";
+import thunk from "redux-thunk";
+import { Provider } from "react-redux";
 const root = ReactDOM.createRoot(document.getElementById("root"));
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+);
 
 const theme = createTheme({
   palette: {
     type: "light",
-    "Shortcut": {
+    Shortcut: {
       main: "#424242",
     },
     primary: {
@@ -139,7 +149,9 @@ const theme = createTheme({
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </React.StrictMode>
 );

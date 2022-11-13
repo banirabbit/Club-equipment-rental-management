@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoginContainer from "../../../components/LoginContainer";
 import { Box, Card, Typography, Button } from "@mui/material";
 import Background from "../../../assets/loginBodyBcground.jpeg";
@@ -6,21 +6,26 @@ import LoginNameInput from "../../../components/LoginNameInput";
 import LoginPasswdInput from "../../../components/LoginPasswdInput";
 import { useState } from "react";
 import LoginButton from "../../../components/LoginButton";
+import { login } from "../../../actions/LoginAction";
+import { LoadingButton } from "@mui/lab";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 export default function NormalLogin() {
   const [name, setName] = useState();
   const [password, setPassword] = useState();
-  // const navigate = useNavigate();
-  // const selector = (state) => {
-  //   return {
-  //     // ifFirst: state.Login.ifFirst,
-  //     // errMsg: state.Login.errorMsg,
-  //     isAuthenticated: state.Login.isAuthenticated,
-  //   };
-  // };
-  // const { isAuthenticated } = useSelector(selector);
+  const [disabled, setDisabled] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const selector = (state) => {
+    return {
+      // ifFirst: state.Login.ifFirst,
+      // errMsg: state.Login.errorMsg,
+      isAuthenticated: state.Login.isAuthenticated,
+    };
+  };
+  const { isAuthenticated } = useSelector(selector);
   const bcgStyle = {
     position: "relative",
     width: "100%",
@@ -40,12 +45,37 @@ export default function NormalLogin() {
     boxShadow: "2px 2px 10px rgb(21, 28, 112)",
     textAlign: "center",
   };
-  // const handleLogin = () => {
-  //   if(isAuthenticated) {
-  //     navigate("/hit/auth/index");
-  //   }
-  // }
-  const handleSubmit = () => {};
+  useEffect(() => {
+    handleLogin();
+  }, [isAuthenticated]);
+  useEffect(() => {
+    if (name && password) {
+      setDisabled(false);
+    }
+  });
+  const handleLogin = () => {
+    if (isAuthenticated) {
+      console.log("success")
+    }
+  };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (name && password) {
+      //var remember_flag = rememberMe && cookieSet() ? "on" : "off";
+      setLoading(true);
+      await dispatch(
+        login({
+          username: name,
+          password: password,
+          //remember_flag: remember_flag,
+        })
+      );
+      setLoading(false);
+    }
+    // if (recaptchaAlert) {
+    //   setCaptcha(false);
+    // }
+  };
   return (
     <Box style={bcgStyle}>
       <Box
@@ -86,7 +116,11 @@ export default function NormalLogin() {
                 label="账号"
                 placeholder="请输入账号"
                 value={name}
-                onchange={(value) => setName(value)}
+                onChange={(e) => {
+                  if (e.target.value.length <= 100) {
+                    setName(e.target.value);
+                  }
+                }}
               ></LoginNameInput>
             </Box>
             <div>
@@ -95,11 +129,36 @@ export default function NormalLogin() {
                 label="密码"
                 placeholder="请输入密码"
                 value={password}
-                onchange={(value) => setPassword(value)}
+                onChange={(e) => {
+                  var value = e.target.value;
+                  var strlist = value.split(" ");
+                  value = "";
+                  for (var key in strlist) {
+                    value = value + strlist[key];
+                  }
+                  if (value.length <= 32) {
+                    setPassword(value);
+                  }
+                }}
               ></LoginPasswdInput>
             </div>
 
-            <LoginButton></LoginButton>
+            <Box display="flex" width="100%" justifyContent="center" mb={1}>
+              <LoadingButton
+                id="basicLoginPageLoginLoadingButton"
+                disabled={disabled}
+                loading={loading}
+                variant="contained"
+                color="lightBlue"
+                size="large"
+                sx={{
+                  color: "#FFFFFF",
+                }}
+                type={"submit"}
+              >
+                登录
+              </LoadingButton>
+            </Box>
             <Box sx={{ "& button": { m: 1 } }} spacing={2}>
               <Button href="#">注册账号</Button>
               <Button href="#">找回密码</Button>
