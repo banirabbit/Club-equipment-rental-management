@@ -27,8 +27,8 @@ axios_instance.interceptors.request.use(
     (res) => {
       // 请求成功对响应数据做处理
       console.log(res);
-      if (res.headers.authorization) {
-        localStorage.setItem("authorization", res.headers.authorization);
+      if (res.data.authorization) {
+        localStorage.setItem("authorization", res.data.authorization);
       }
       if (res.data.code === 500 && res.data.message === "Invalid JWT") {
         localStorage.removeItem("authorization");

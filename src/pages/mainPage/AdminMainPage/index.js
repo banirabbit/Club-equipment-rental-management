@@ -1,26 +1,82 @@
-import Header from "../../components/Header/Header";
+import Header from "../../../components/Header/Header";
 import * as React from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import "./index.css";
-import { Stack } from "@mui/system";
+
 import { Card, Grid } from "@mui/material";
 import { Typography, Button } from "@mui/material";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-export default function MainPage() {
+import CardEntity from "../../../components/CardEntity/CardEntity";
+import { makeStyles } from "@mui/styles";
+
+export default function AdminMainPage() {
   const [value, setValue] = React.useState("one");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const equipList = [
+    {
+      type: "camera",
+      rent: "50",
+      title: "Sony/索尼 ZV-E10 ZV-E10Lvlog微单相机",
+      note: "设备贵重需要轻拿轻放，电池用的很快需要多备几块，用完尽量第一时间归还，如果故障请联系我。",
+      state: "Yes",
+    },
+    {
+      type: "book",
+      rent: "0",
+      title: "计算机网络自顶向下方法",
+      note: "设备贵重需要轻拿轻放，电池用的很快需要多备几块，用完尽量第一时间归还，如果故障请联系我。",
+      state: "Yes",
+    },
+    {
+      type: "computer",
+      rent: "20",
+      title: "联想(Lenovo)天逸510S英特尔酷睿i5个人商务台式机电脑整机",
+      note: "设备贵重需要轻拿轻放，电池用的很快需要多备几块，用完尽量第一时间归还，如果故障请联系我。",
+      state: "No",
+    },
+    {
+      type: "experiment",
+      rent: "100",
+      title: "earcum组合逻辑电路编码译码显示套件",
+      note: "设备贵重需要轻拿轻放，电池用的很快需要多备几块，用完尽量第一时间归还，如果故障请联系我。",
+      state: "Yes",
+    },
+    {
+      type: "",
+      rent: "10",
+      title: "家用工具箱套装五金工具套装多功能家庭电工木工电讯维修工具",
+      note: "设备贵重需要轻拿轻放，电池用的很快需要多备几块，用完尽量第一时间归还，如果故障请联系我。",
+      state: "Yes",
+    },
+  ];
+
+  const useStyles = makeStyles((theme) => ({
+    // inspired by the settings https://www.youtube.com/gaming uses ;)
+    gameEntry: {
+      // 2 items on [0, sm]
+      [theme.breakpoints.only("xs")]: {
+        "flex-basis": "calc((100% / 2) - 1%)",
+      },
+      // 4 items on [sm, md[
+      [theme.breakpoints.only("sm")]: {
+        "flex-basis": "calc((100% / 4) - 1%)",
+      },
+      // 8 items on [md, infinity]
+      [theme.breakpoints.up("md")]: {
+        "flex-basis": "calc((100% / 8) - 1%)",
+      },
+    },
+  }));
+
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
-      <Header></Header>
+      <Header isAdmin={true}></Header>
       <Grid
         item
         xs={12}
@@ -46,9 +102,9 @@ export default function MainPage() {
               indicatorColor="secondary"
               aria-label="secondary tabs example"
             >
-              <Tab value="one" label="Item One" />
-              <Tab value="two" label="Item Two" />
-              <Tab value="three" label="Item Three" />
+              <Tab value="one" label="分类" />
+              <Tab value="two" label="帮助" />
+              <Tab value="three" label="租借记录" />
             </Tabs>
           </Box>
         </Grid>
@@ -112,31 +168,20 @@ export default function MainPage() {
         </Grid>
         <Grid
           container
+          marginTop="40px"
           direction="row"
           justifyContent="center"
           alignItems="center"
+          style={{
+            rowGap: "25px",
+          }}
+          spacing={1}
         >
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              id="card-img"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                Lizard
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Lizards are a widespread group of squamate reptiles, with over
-                6,000 species, ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Share</Button>
-              <Button size="small">Learn More</Button>
-            </CardActions>
-          </Card>
+          {equipList.map((equip) => (
+            <Grid className={useStyles.gameEntry} width="350px" height="360px">
+              <CardEntity equip={equip} height="100%" isAdmin={true}></CardEntity>
+            </Grid>
+          ))}
         </Grid>
       </Grid>
     </Box>

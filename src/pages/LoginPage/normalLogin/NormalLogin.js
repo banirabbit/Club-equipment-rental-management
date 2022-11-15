@@ -56,6 +56,7 @@ export default function NormalLogin() {
   const handleLogin = () => {
     if (isAuthenticated) {
       console.log("success")
+      navigate("/hit/auth/index");
     }
   };
   const handleSubmit = async (e) => {

@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -55,7 +55,8 @@ const handleProfileMenuOpen = () => {
 };
 const menuId = "primary-search-account-menu";
 
-export default function Header() {
+export default function Header(props) {
+  const { isAdmin } = props;
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" color="Shortcut">
@@ -91,6 +92,19 @@ export default function Header() {
           >
             <AccountCircle />
           </IconButton>
+          {isAdmin ? (
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label="add user and issue"
+              aria-controls={menuId}
+              aria-haspopup="true"
+              onClick={handleProfileMenuOpen}
+              color="white"
+            >
+              <AddCircleIcon />
+            </IconButton>
+          ) : null}
         </Toolbar>
       </AppBar>
     </Box>

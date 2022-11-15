@@ -1,0 +1,10 @@
+#text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+#state {
+  color: rgb(88, 203, 62);
+}

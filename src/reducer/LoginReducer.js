@@ -10,7 +10,7 @@ const initState = {
     const { type, data } = action;
     switch (type) {
       case actions.LOGIN_SUCCESS:
-        localStorage.setItem("authorization", data.headers.authorization);
+        localStorage.setItem("authorization", data.data.authorization);
         return {
           ...state,
           auth: data.headers.authorization,

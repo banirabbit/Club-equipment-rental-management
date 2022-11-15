@@ -1,4 +1,4 @@
-@import url("../../assets/font/fontawesome-all.min.css");
+@import url("../../../assets/font/fontawesome-all.min.css");
 @import url("https://fonts.googleapis.com/css?family=Oleo+Script:400|Open+Sans:300,300italic,600,600italic,800");
 
 
@@ -34,9 +34,5 @@
     /* Banner */
 
 	#banner {
-		background: url(../../assets/file2.jpeg) no-repeat -100px -1000px;
+		background: url(../../../assets/file2.jpeg) no-repeat -100px -1000px;
 	}
-
-    #card-img {
-        bachground: url(../../assets/sony1.jpeg)
-    }
