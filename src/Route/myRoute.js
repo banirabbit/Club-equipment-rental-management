@@ -4,6 +4,10 @@ import NormalLogin from '../pages/LoginPage/normalLogin/NormalLogin';
 import MainPage from '../pages/mainPage/UserMainPage';
 import AdminMainPage from '../pages/mainPage/AdminMainPage';
 import HomePage from '../pages/AuthPage/HomePage';
+import FormPage from '../pages/FormPage/FormPage';
+import FormMainPage from '../pages/FormPage';
+import AddDeviceFormPage from '../pages/FormPage/AddDeviceFormPage';
+import AddUserFormPage from '../pages/FormPage/AddUserFormPage';
 export default function MyRoute() {
   function Logined(props) {
     const isLogin = !!(
@@ -26,6 +30,9 @@ export default function MyRoute() {
           <Route path="index" element={<HomePage />} />
           <Route path="user" element={<MainPage />} />
           <Route path="admin" element={<AdminMainPage />} />
+          <Route path="admin/form" element={<FormMainPage />} />
+          <Route path="admin/createdevice" element={<AddDeviceFormPage />} />
+          <Route path="admin/createuser" element={<AddUserFormPage />} />
         </Route>
       </Route>
     </Routes>

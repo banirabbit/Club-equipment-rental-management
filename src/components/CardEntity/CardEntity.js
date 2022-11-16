@@ -13,7 +13,7 @@ import ExperiImage from "../../assets/Experimental.jpg";
 import { Box } from "@mui/system";
 import "./text.css";
 export default function CardEntity(props) {
-  const { equip, isAdmin } = props;
+  const { equip, isAdmin, handleRent } = props;
   const cameraUrl = CameraImage;
   const defaultUrl = DefaultImage;
   const computerUrl = ComputerImage;
@@ -75,7 +75,7 @@ export default function CardEntity(props) {
         )}
       </CardContent>
       <CardActions>
-        <Button size="small">点击租借</Button>
+        <Button size="small" onClick={handleRent}>点击租借</Button>
         {isAdmin ? <Button size="small">更新状态</Button> : null}
       </CardActions>
     </Card>

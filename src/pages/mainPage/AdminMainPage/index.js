@@ -11,7 +11,7 @@ import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import CardEntity from "../../../components/CardEntity/CardEntity";
 import { makeStyles } from "@mui/styles";
-
+import { Navigate, useNavigate } from "react-router-dom";
 export default function AdminMainPage() {
   const [value, setValue] = React.useState("one");
 
@@ -73,6 +73,10 @@ export default function AdminMainPage() {
       },
     },
   }));
+  const Navigate = useNavigate();
+  const handleRent = () => {
+    Navigate("/hit/auth/admin/form");
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
@@ -179,7 +183,12 @@ export default function AdminMainPage() {
         >
           {equipList.map((equip) => (
             <Grid className={useStyles.gameEntry} width="350px" height="360px">
-              <CardEntity equip={equip} height="100%" isAdmin={true}></CardEntity>
+              <CardEntity
+                equip={equip}
+                height="100%"
+                isAdmin={true}
+                handleRent={handleRent}
+              ></CardEntity>
             </Grid>
           ))}
         </Grid>

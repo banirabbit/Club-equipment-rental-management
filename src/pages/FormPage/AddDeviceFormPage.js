@@ -8,31 +8,30 @@ import { useState } from "react";
 import { Typography } from "@mui/material";
 import FormDatePicker from "../../components/FormDatePicker/FormDatePicker";
 import dayjs from "dayjs";
+import FormSelect from "../../components/FormSelect/FormSelect";
 import { Button } from "@mui/material";
-export default function FormPage(props) {
+export default function AddDeviceFormPage(props) {
   const { setJump } = props;
   const [name, setName] = useState();
-  const [id, setId] = useState();
-  const [date, setDate] = useState(dayjs());
-  const [phone, setPhone] = useState();
+  const [category, setCategory] = useState();
   const [ways, setWays] = useState();
-  const handleDateChange = (value) => {
-    setDate(value);
-  };
+  const [rent, setRent] = useState(0);
+  const menuList = ["1", "2", "3", "4"]
   const handleNameChange = (value) => {
     setName(value);
   };
-  const handleIdChange = (value) => {
-    setId(value);
-  };
-  const handlePhoneChange = (value) => {
-    setPhone(value);
-  };
+  
   const handleWaysChange = (value) => {
     setWays(value);
+  };
+  const handleCategoryChange = (value) => {
+    setCategory(value);
   }
+  const handleRentChange = (value) => {
+    setRent(value);
+  };
   const handleSubmit = () => {
-    setJump("pay");
+    console.log("success");
   }
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
@@ -62,40 +61,36 @@ export default function FormPage(props) {
             color="#000"
             fontWeight="400"
           >
-            申请表
+            添加器材
           </Typography>
           <FormInput
-            label="姓名"
+            label="名称"
             value={name}
-            placeholder="请输入姓名"
+            placeholder="请输入器材名称"
             onChange={handleNameChange}
           ></FormInput>
           <FormInput
-            label="学号"
-            value={id}
-            placeholder="请输入学号"
-            onChange={handleIdChange}
-          ></FormInput>
-          <FormDatePicker
-            label="归还日期"
-            value={date}
-            onChange={handleDateChange}
-            minDate={dayjs()}
-            maxDate={dayjs().add(30, "day")}
-          ></FormDatePicker>
-          <FormInput
-            label="手机号"
-            value={phone}
-            placeholder="请输入手机号"
-            onChange={handlePhoneChange}
-          ></FormInput>
-          <FormInput
-            label="用途"
+            label="备注"
             value={ways}
-            placeholder="请输入用途"
+            placeholder="请输入备注"
             onChange={handleWaysChange}
           ></FormInput>
-          <Button variant="contained" size="large" onClick={handleSubmit}>点击提交</Button>
+          <FormSelect
+            label="类别"
+            value={category}
+            placeholder="请选择类别"
+            onChange={handleCategoryChange}
+            menuList={menuList}
+          ></FormSelect>
+          <FormInput
+            label="押金"
+            value={rent}
+            placeholder="请输入押金"
+            onChange={handleRentChange}
+          ></FormInput>
+          <Button variant="contained" size="large" onClick={handleSubmit}>
+            点击提交
+          </Button>
         </Grid>
       </Grid>
     </Box>

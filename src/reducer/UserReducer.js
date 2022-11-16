@@ -6,6 +6,7 @@ const initState = {
   userRole: "",
   userId: "",
   userLimited: "",
+  createUserResult: "",
 };
 
 export default function UserReducer(state = initState, action) {
@@ -20,7 +21,11 @@ export default function UserReducer(state = initState, action) {
         userId: data.userId,
         userLimited: data.userLimited,
       };
-
+    case actions.CREATE_USER:
+      return {
+        ...state,
+        createUserResult: data,
+      };
     default:
       return state;
   }

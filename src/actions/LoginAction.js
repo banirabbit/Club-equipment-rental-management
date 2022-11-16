@@ -17,7 +17,7 @@ export function login(formData) {
         const res = await axios_instance.post("/login", data);
         if (res.data.code === 200) {
           dispatch(loginSuccess(res))
-          //dispatch(getUserInfo()); 
+          dispatch(getUserInfo()); 
         } else {
         //   if (res.data.message !== undefined && res.data.message !== null) {
         //     dispatch(loginFailed(res.data.message));

@@ -13,7 +13,7 @@ const initState = {
         localStorage.setItem("authorization", data.data.authorization);
         return {
           ...state,
-          auth: data.headers.authorization,
+          auth: data.data.authorization,
           isAuthenticated: true,
         };
       default:

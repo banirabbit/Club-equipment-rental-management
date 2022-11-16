@@ -1,5 +1,6 @@
 import { axios_instance } from "../utils/axios_instance";
 export const GET_USER_INFO = "GET_USER_INFO";
+export const CREATE_USER = "CREATE_USER";
 
 //Get user information
 export function getUserInfo() {
@@ -27,3 +28,38 @@ export function getUserInfo() {
       }
     };
   }
+
+  //Create a new user
+export function createUser(id) {
+  return async (dispatch) => {
+    try {
+      let url = "/user/createNormalUser";
+
+      const result = await axios_instance.post(
+        url,
+        {
+          account: id,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      if (result.data.code === 200) {
+        dispatch({ type: CREATE_USER, data: "true" });
+      } else {
+        if (result.data.code === 500) {
+          if (result.data.message === "此学号已被注册")
+            //判断是否是邮箱存在错误
+            dispatch({ type: CREATE_USER, data: "EmailExit" });
+        } else {
+          dispatch({ type: CREATE_USER, data: "error" });
+        }
+      }
+    } catch (err) {
+      dispatch({ type: CREATE_USER, data: err.response.data.msg });
+    }
+  };
+}
