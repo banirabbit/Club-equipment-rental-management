@@ -10,9 +10,7 @@ export default function HomePage() {
   }
   
   const auth = getAuth(localStorage.getItem("authorization"));
-  useEffect(()=>{
-    console.log(auth, "111111");
-  })
+  
   //return <div>123</div>
   switch (auth) {
     case "admin:read":
