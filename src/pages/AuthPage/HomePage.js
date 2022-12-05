@@ -5,9 +5,9 @@ import { getAuth } from "../../utils/authTokenHandler";
 
 export default function HomePage() {
   // /simt/auth/index 中引入。根据用户不同的权限进行分流，到达各自的首页。
-  // if(localStorage.getItem("authorization") === null) {
-  //   return <Navigate to="/hit/login" />
-  // }
+  if(localStorage.getItem("authorization") === null) {
+    return <Navigate to="/hit/login" />
+  }
   
   const auth = getAuth(localStorage.getItem("authorization"));
   useEffect(()=>{
