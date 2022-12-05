@@ -7,6 +7,7 @@ const initState = {
   userId: "",
   userLimited: "",
   createUserResult: "",
+  userList: [],
 };
 
 export default function UserReducer(state = initState, action) {
@@ -26,6 +27,11 @@ export default function UserReducer(state = initState, action) {
         ...state,
         createUserResult: data,
       };
+    case actions.SET_USERLIST:
+      return {
+        ...state,
+        userList: data,
+      }
     default:
       return state;
   }

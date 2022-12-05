@@ -1,6 +1,7 @@
 import { axios_instance } from "../utils/axios_instance";
 import { getUserInfo } from "./UserAction";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_ACCOUNT = "LOGIN_ACCOUNT";
 export const loginSuccess = (res) => ({
     type: LOGIN_SUCCESS,
     data: res,
@@ -18,6 +19,7 @@ export function login(formData) {
         if (res.data.code === 200) {
           dispatch(loginSuccess(res))
           dispatch(getUserInfo()); 
+          dispatch({ type: LOGIN_ACCOUNT, data: formData.username });
         } else {
         //   if (res.data.message !== undefined && res.data.message !== null) {
         //     dispatch(loginFailed(res.data.message));

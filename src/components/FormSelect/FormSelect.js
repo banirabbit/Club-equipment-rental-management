@@ -22,12 +22,12 @@ export default function FormSelect(props) {
           label={label}
           onChange={onChange}
         >
-          <MenuItem disabled value="">
+          <MenuItem disabled value="default">
             <em>{placeholder}</em>
           </MenuItem>
           {menuList.map((item) => (
-            <MenuItem value={item}>
-              <em>{item}</em>
+            <MenuItem value={item.value}>
+              <em>{item.name}</em>
             </MenuItem>
           ))}
         </Select>

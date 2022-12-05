@@ -1,6 +1,8 @@
 import { axios_instance } from "../utils/axios_instance";
+import { setErrorSnackbarMessageAndOpen } from "./SnackbarAction";
 export const GET_USER_INFO = "GET_USER_INFO";
 export const CREATE_USER = "CREATE_USER";
+export const SET_USERLIST = "SET_USERLIST";
 
 //Get user information
 export function getUserInfo() {
@@ -60,6 +62,25 @@ export function createUser(id) {
       }
     } catch (err) {
       dispatch({ type: CREATE_USER, data: err.response.data.msg });
+    }
+  };
+}
+
+export function getUserList() {
+  return async (dispatch) => {
+    const res = await axios_instance.get("/user/getPageUsers", {
+      params: {
+        pageNum: 1,
+        pageSize: 100,
+      },
+      headers: {
+        authorization: localStorage.getItem("authorization"),
+      },
+    });
+    if (res.data.code === 200) {
+      dispatch({ type: SET_USERLIST, data: res.data.data });
+    } else {
+      dispatch(setErrorSnackbarMessageAndOpen("nullError", true));
     }
   };
 }

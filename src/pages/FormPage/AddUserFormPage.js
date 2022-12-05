@@ -50,28 +50,28 @@ export default function AddUserFormPage(props) {
       setLoading(false);
       setSuccessOpen(true);
       setEmailExitError(false);
-      isClear()
+      isClear();
     } else if (result === "EmailExit") {
       setEmailExitError(true);
       setLoading(false);
-    } else if(result === "error"){     
+    } else if (result === "error") {
       setFailOpen(true);
     }
   }, [createUserResult]);
 
   const isClear = () => {
     setId("");
-  }
+  };
 
   const handleSuccessClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setSuccessOpen(false);
   };
 
   const handleFailClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setFailOpen(false);
@@ -135,8 +135,16 @@ export default function AddUserFormPage(props) {
             </LoadingButton>
           </Box>
         </Grid>
-        <SuccessAlert open={successOpen} handleClose={handleSuccessClose} message="Successfully create a user."></SuccessAlert>
-        <FailedAlert open={failOpen} handleClose={handleFailClose} message="Some error happened."></FailedAlert>
+        <SuccessAlert
+          open={successOpen}
+          handleClose={handleSuccessClose}
+          message="Successfully create a user."
+        ></SuccessAlert>
+        <FailedAlert
+          open={failOpen}
+          handleClose={handleFailClose}
+          message="Some error happened."
+        ></FailedAlert>
       </Grid>
     </Box>
   );

@@ -9,15 +9,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function FailedAlert(props) {
-  const {open, setOpen, message} = props;
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const {open, setOpen, message, handleClose} = props;
 
   return (
     <Stack spacing={2} sx={{ width: '100%' }}>

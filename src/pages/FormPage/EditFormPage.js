@@ -17,11 +17,24 @@ import FailedAlert from "../../components/Alert/FailedAlert";
 import { handleApply } from "../../actions/DeviceAction";
 import { Backdrop } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-export default function FormPage(props) {
-  const { open, setOpen, setRefresh, handleClose, id, status } = props;
-  const [date, setDate] = useState(dayjs());
-  const [phone, setPhone] = useState();
-  const [ways, setWays] = useState();
+import FormMultilineInput from "../../components/FormMultilineInput/FormMultilineInput";
+export default function EditFormPage(props) {
+  const {
+    open,
+    setOpen,
+    note,
+    setNote,
+    title, 
+    setTitle, 
+    editType,
+    setEditType,
+    rent,
+    setRent,
+    setRefresh,
+    handleEditClose,
+    id,
+    status,
+  } = props;
   const [successOpen, setSuccessOpen] = useState(false);
   const [failOpen, setFailOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -35,22 +48,18 @@ export default function FormPage(props) {
     };
   };
   const { userName, applyPass, account } = useSelector(selector);
-  const handleDateChange = (value) => {
-    setDate(value);
+  
+  const handleNoteChange = (e) => {
+    setNote(e.target.value);
   };
-  const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
   };
-  const handleWaysChange = (e) => {
-    setWays(e.target.value);
+  const handleRentChange = (e) => {
+    setRent(e.target.value);
   };
   const handleSubmit = async () => {
-    await dispatch(handleApply(id, account, userName, phone, ways));
-    setSuccessOpen(true);
-    isClear();
-    setDisabled(true);
-    setOpen(false);
-    setRefresh(true)
+    console.log("1");
   };
 
   useEffect(() => {
@@ -60,20 +69,16 @@ export default function FormPage(props) {
       setSuccessOpen(true);
       setDisabled(true);
       setOpen(false);
-      isClear();
+      
     } else if (result === "器材已被租借") {
       setFailOpen(true);
     }
   }, [applyPass]);
   useEffect(() => {
-    if (date && phone && ways && status !== "0") {
+    if (note && title && editType && rent) {
       setDisabled(false);
     }
   });
-  const isClear = () => {
-    setPhone("");
-    setWays("");
-  };
 
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -101,7 +106,7 @@ export default function FormPage(props) {
               left: "45%",
             }}
             onClick={() => {
-              handleClose();
+              handleEditClose();
             }}
           >
             <HighlightOffIcon></HighlightOffIcon>
@@ -112,9 +117,9 @@ export default function FormPage(props) {
             color="#000"
             fontWeight="400"
           >
-            申请表
+            编辑信息
           </Typography>
-          <Box
+          {/* <Box
             component="form"
             sx={{
               "& .MuiTextField-root": { m: 2, width: "45ch" },
@@ -128,26 +133,25 @@ export default function FormPage(props) {
               label="姓名"
               defaultValue={userName}
             />
-          </Box>
-          <FormDatePicker
-            label="归还日期"
-            value={date}
-            onChange={handleDateChange}
-            minDate={dayjs()}
-            maxDate={dayjs().add(30, "day")}
-          ></FormDatePicker>
+          </Box> */}
           <FormInput
-            label="手机号"
-            value={phone}
-            placeholder="请输入手机号"
-            onChange={handlePhoneChange}
+            label="名称"
+            value={title}
+            placeholder="请输入名称"
+            onChange={handleTitleChange}
           ></FormInput>
           <FormInput
-            label="用途"
-            value={ways}
-            placeholder="请输入用途"
-            onChange={handleWaysChange}
+            label="租金"
+            value={rent}
+            placeholder="请输入租金"
+            onChange={handleRentChange}
           ></FormInput>
+          <FormMultilineInput
+            label="备注"
+            value={note}
+            placeholder="请输入备注"
+            onChange={handleNoteChange}
+          ></FormMultilineInput>
           <Box display="flex" width="100%" justifyContent="center" mb={1}>
             <LoadingButton
               id="basicLoginPageLoginLoadingButton"
@@ -172,7 +176,7 @@ export default function FormPage(props) {
       <SuccessAlert
         open={successOpen}
         handleClose={handleSuccessClose}
-        message="租借成功"
+        message="提交成功"
       ></SuccessAlert>
       <FailedAlert
         open={failOpen}

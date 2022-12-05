@@ -138,9 +138,7 @@ export default function Header(props) {
       },
     },
   }));
-  const handleProfileMenuOpen = () => {
-    console.log("1");
-  };
+  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isOpen = Boolean(anchorEl);
   const menuActions = React.useRef(null);
@@ -184,9 +182,12 @@ export default function Header(props) {
     close();
   };
   const menuId = "primary-search-account-menu";
+  const handleUserPage = () => {
+    navigate("/hit/detail/index");
+  }
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="Shortcut">
+    <Box sx={{ flexGrow: 1 }} width="100%">
+      <AppBar position="static" color="Shortcut" width="100%">
         <Toolbar>
           <Typography
             variant="h4"
@@ -215,8 +216,8 @@ export default function Header(props) {
             aria-label="account of current user"
             aria-controls={menuId}
             aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
             color="white"
+            onClick={handleUserPage}
           >
             <AccountCircle />
           </IconButton>

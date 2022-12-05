@@ -11,6 +11,8 @@ import { LoadingButton } from "@mui/lab";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import "./body.css"
+import { Grid, Backdrop } from "@mui/material";
 export default function NormalLogin() {
   const [name, setName] = useState();
   const [password, setPassword] = useState();
@@ -31,6 +33,8 @@ export default function NormalLogin() {
     width: "100%",
     height: "723px",
     backgroundImage: `url(${Background})`,
+    backgroundSize:"cover",
+		backgroundAttachment: "fixed",
   };
   const outContainerStyle = {
     display: "flex",

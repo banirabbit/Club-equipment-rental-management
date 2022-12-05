@@ -12,8 +12,9 @@ import BookImage from "../../assets/book.png";
 import ExperiImage from "../../assets/Experimental.jpg";
 import { Box } from "@mui/system";
 import "./text.css";
+import { Tooltip } from "@mui/material";
 export default function CardEntity(props) {
-  const { equip, isAdmin, handleRent } = props;
+  const { equip, isAdmin, handleRent, handleEdit, id } = props;
   const cameraUrl = CameraImage;
   const defaultUrl = DefaultImage;
   const computerUrl = ComputerImage;
@@ -35,7 +36,7 @@ export default function CardEntity(props) {
   };
 
   const getState = (value) => {
-    if (value === "Yes") {
+    if (value === "1") {
       return "可用";
     } else {
       return "不可用";
@@ -52,31 +53,44 @@ export default function CardEntity(props) {
       />
       <CardContent>
         <Box height="70px">
-          <Typography id="text" gutterBottom variant="h5" component="div">
-            {equip.title}
-          </Typography>
+          <Tooltip title={equip.title}>
+            <Typography id="text" gutterBottom variant="h5" component="div">
+              {equip.title}
+            </Typography>
+          </Tooltip>
         </Box>
         <Typography variant="body2" color="text.secondary">
           押金：{equip.rent}元
         </Typography>
         <Box height="45px">
-          <Typography id="text" variant="body2" color="text.secondary">
-            {equip.note}
-          </Typography>
+          <Tooltip title={equip.note}>
+            <Typography id="text" variant="body2" color="text.secondary">
+              {equip.note}
+            </Typography>
+          </Tooltip>
         </Box>
-        {getState(equip.state) === "可用" ? (
-          <Typography variant="body2"  id="state" fontWeight="600">
-            状态：{getState(equip.state)}
+        {getState(equip.status) === "可用" ? (
+          <Typography variant="body2" id="state" fontWeight="600">
+            状态：{getState(equip.status)}
           </Typography>
         ) : (
           <Typography variant="body2" color="rgb(207, 78, 58)" fontWeight="600">
-            状态：{getState(equip.state)}
+            状态：{getState(equip.status)}
           </Typography>
         )}
       </CardContent>
       <CardActions>
-        <Button size="small" onClick={handleRent}>点击租借</Button>
-        {isAdmin ? <Button size="small">更新状态</Button> : null}
+        {getState(equip.status) === "可用" && !isAdmin ? (
+          <Button size="small" onClick={handleRent}>
+            点击租借
+          </Button>
+        ) : (
+          <Button disabled size="small">
+            点击租借
+          </Button>
+        )}
+
+        {isAdmin ? <Button size="small" onClick={handleEdit} >编辑信息</Button> : null}
       </CardActions>
     </Card>
   );
