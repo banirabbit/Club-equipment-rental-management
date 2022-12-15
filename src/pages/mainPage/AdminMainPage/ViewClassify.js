@@ -22,14 +22,15 @@ export default function ViewClassify(props) {
   const selector = (state) => {
     return {
       deviceList: state.Device.deviceList,
+      search: state.Device.search,
     };
   };
-  const { deviceList } = useSelector(selector);
+  const { deviceList, search } = useSelector(selector);
   const [refresh, setRefresh] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     if (refresh) {
-      dispatch(getDeviceList(type));
+      dispatch(getDeviceList(search, type));
       setRefresh(false);
     }
     console.log(id);

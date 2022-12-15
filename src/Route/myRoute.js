@@ -12,6 +12,7 @@ import UserHomePage from "../pages/UserPage";
 import AdminDetailPage from "../pages/UserPage/AdminDetailPage";
 import UserDetailPage from "../pages/UserPage/UserDetailPage";
 import AuthPage from "../pages/AuthPage/AuthPage";
+import FirstLogin from "../pages/LoginPage/FirstLogin/FirstLogin";
 export default function MyRoute() {
   function Logined(props) {
     const isLogin = !!(
@@ -30,6 +31,7 @@ export default function MyRoute() {
       <Route path="*" element={<Navigate replace to="/hit/login" />} />
       <Route path="/hit/">
         <Route path="login" element={<NormalLogin />} />
+        <Route path="firstLogin" element={<FirstLogin />} />
         <Route path="detail">
           <Route path="index" element={<UserHomePage />} />
           <Route path="admin" element={<AdminDetailPage />} />

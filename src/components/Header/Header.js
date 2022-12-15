@@ -15,7 +15,15 @@ import MenuItemUnstyled, {
 } from "@mui/base/MenuItemUnstyled";
 import PopperUnstyled from "@mui/base/PopperUnstyled";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { Button } from "@mui/material";
+import { SearchField } from "../SearchField/SearchField";
+import { getDeviceList, setSearchDevice } from "../../actions/DeviceAction";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { InputAdornment } from "@mui/material";
+import { unstable_batchedUpdates } from "react-dom";
+import { logout } from "../../actions/LoginAction";
+import { withStyles } from '@material-ui/core/styles';
 const blue = {
   100: "#DAECFF",
   200: "#99CCF3",
@@ -38,8 +46,10 @@ const grey = {
   900: "#24292f",
 };
 
+
+
 export default function Header(props) {
-  const { isAdmin } = props;
+  const { isAdmin, search, setSearch } = props;
   const StyledListbox = styled("ul")(
     ({ theme }) => `
     font-family: IBM Plex Sans, sans-serif;
@@ -97,52 +107,16 @@ export default function Header(props) {
     }
     `
   );
-  const Search = styled("div")(({ theme }) => ({
-    position: "relative",
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.75),
-    "&:hover": {
-      backgroundColor: alpha(theme.palette.common.white, 0.5),
-    },
-    marginLeft: 0,
-    width: "100%",
-    [theme.breakpoints.up("sm")]: {
-      marginLeft: theme.spacing(1),
-      width: "auto",
-    },
-  }));
 
-  const SearchIconWrapper = styled("div")(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: "100%",
-    position: "absolute",
-    pointerEvents: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create("width"),
-      width: "100%",
-      [theme.breakpoints.up("sm")]: {
-        width: "12ch",
-        "&:focus": {
-          width: "20ch",
-        },
-      },
-    },
-  }));
-  
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const isOpen = Boolean(anchorEl);
+  const isUserOpen = Boolean(anchorElUser);
   const menuActions = React.useRef(null);
+  const menuActionsUser = React.useRef(null);
   const preventReopen = React.useRef(false);
+  const preventUserReopen = React.useRef(false);
+  const dispatch = useDispatch();
   const handleCreatePageOpen = (event) => {
     if (preventReopen.current) {
       event.preventDefault();
@@ -156,35 +130,77 @@ export default function Header(props) {
       setAnchorEl(event.currentTarget);
     }
   };
+  const handleUserPageOpen = (event) => {
+    if (preventUserReopen.current) {
+      event.preventDefault();
+      preventUserReopen.current = false;
+      return;
+    }
+
+    if (isUserOpen) {
+      setAnchorElUser(null);
+    } else {
+      setAnchorElUser(event.currentTarget);
+    }
+  };
   const close = () => {
     setAnchorEl(null);
-
+  };
+  const closeUser = () => {
+    setAnchorElUser(null);
   };
   const navigate = useNavigate();
   const [deviceOpen, setDeviceOpen] = React.useState(false);
   const [userOpen, setUserOpen] = React.useState(false);
+  const [loginOutOpen, setLoginOutOpen] = React.useState(false);
+  const [profile, setProfile] = React.useState(false);
+
   React.useEffect(() => {
-    if(deviceOpen == true && userOpen == false) {
+    if (deviceOpen == true && userOpen == false) {
       navigate("/hit/auth/admin/createdevice");
-    }else if(deviceOpen == false && userOpen == true) {
+    } else if (deviceOpen == false && userOpen == true) {
       navigate("/hit/auth/admin/createuser");
     }
-  })
+
+    if (loginOutOpen == true && profile == false) {
+      dispatch(logout());
+      navigate("/hit/login");
+    } else if (loginOutOpen == false && profile == true) {
+      handleUserPage();
+    }
+  });
   const createHandleMenuClick = (menuItem) => {
-    if(menuItem === "device") {
+    if (menuItem === "device") {
       setDeviceOpen(true);
       setUserOpen(false);
     }
-    if(menuItem === "user") {
+    if (menuItem === "user") {
       setDeviceOpen(false);
       setUserOpen(true);
     }
+
     close();
+  };
+  const createUserHandleMenuClick = (menuItem) => {
+    if (menuItem === "logout") {
+      setLoginOutOpen(true);
+      setProfile(false);
+    }
+    if (menuItem === "profile") {
+      setLoginOutOpen(false);
+      setProfile(true);
+    }
+    closeUser();
   };
   const menuId = "primary-search-account-menu";
   const handleUserPage = () => {
     navigate("/hit/detail/index");
-  }
+  };
+
+  const handleSearch = (e) => {
+    setSearch(e);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }} width="100%">
       <AppBar position="static" color="Shortcut" width="100%">
@@ -197,19 +213,43 @@ export default function Header(props) {
             color="#fff"
             fontFamily="'Oleo Script', serif"
             fontSize="50px"
-            sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, textDecoration: 'none', }}
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", sm: "block" },
+              textDecoration: "none",
+            }}
           >
             Lease
           </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
+          
+          <SearchField
+            id="SearchInput"
+            placeholder="Search..."
+            size="small"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={search}
+            delay={300}
+            defaultValue={search}
+            handleSearch={handleSearch}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start" >
+                  <SearchIcon color="white" />
+                </InputAdornment>
+              ),
+              style: {
+                fontSize: "15px",
+                fontWeight: "600",
+                color: "#fff",
+              },
+              
+            }}
+            sx={{ background: "Shortcut", }}
+            inputProps={{ "aria-label": "search" }}
+          ></SearchField>
+          
           <IconButton
             size="large"
             edge="end"
@@ -217,10 +257,35 @@ export default function Header(props) {
             aria-controls={menuId}
             aria-haspopup="true"
             color="white"
-            onClick={handleUserPage}
+            onClick={handleUserPageOpen}
           >
             <AccountCircle />
           </IconButton>
+          <MenuUnstyled
+            actions={menuActionsUser}
+            open={isUserOpen}
+            onClose={closeUser}
+            anchorEl={anchorElUser}
+            slots={{ root: Popper, listbox: StyledListbox }}
+            slotProps={{ listbox: { id: "simple-menu" } }}
+          >
+            <StyledMenuItem
+              onClick={() => {
+                createUserHandleMenuClick("logout");
+              }}
+            >
+              退出登录
+            </StyledMenuItem>
+            {!isAdmin ? (
+              <StyledMenuItem
+                onClick={() => {
+                  createUserHandleMenuClick("profile");
+                }}
+              >
+                个人主页
+              </StyledMenuItem>
+            ) : null}
+          </MenuUnstyled>
           {isAdmin ? (
             <div>
               <IconButton
@@ -242,10 +307,18 @@ export default function Header(props) {
                 slots={{ root: Popper, listbox: StyledListbox }}
                 slotProps={{ listbox: { id: "simple-menu" } }}
               >
-                <StyledMenuItem onClick={() => {createHandleMenuClick("device")}}>
+                <StyledMenuItem
+                  onClick={() => {
+                    createHandleMenuClick("device");
+                  }}
+                >
                   添加器材
                 </StyledMenuItem>
-                <StyledMenuItem onClick={() => {createHandleMenuClick("user")}}>
+                <StyledMenuItem
+                  onClick={() => {
+                    createHandleMenuClick("user");
+                  }}
+                >
                   添加用户
                 </StyledMenuItem>
               </MenuUnstyled>

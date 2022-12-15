@@ -14,18 +14,19 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SuccessAlert from "../../components/Alert/SuccessAlert";
 import FailedAlert from "../../components/Alert/FailedAlert";
-import { handleApply } from "../../actions/DeviceAction";
+import { EditDevice, handleApply } from "../../actions/DeviceAction";
 import { Backdrop } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import FormMultilineInput from "../../components/FormMultilineInput/FormMultilineInput";
+import FormSelect from "../../components/FormSelect/FormSelect";
 export default function EditFormPage(props) {
   const {
     open,
     setOpen,
     note,
     setNote,
-    title, 
-    setTitle, 
+    title,
+    setTitle,
     editType,
     setEditType,
     rent,
@@ -39,16 +40,40 @@ export default function EditFormPage(props) {
   const [failOpen, setFailOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const menuList = [
+    {
+      name: "摄影器材",
+      value: "camera",
+    },
+    {
+      name: "电子设备",
+      value: "computer",
+    },
+    {
+      name: "书刊杂志",
+      value: "book",
+    },
+    {
+      name: "实验设备",
+      value: "experiment",
+    },
+    {
+      name: "其他",
+      value: "others",
+    },
+    {
+      name: "",
+      value: "",
+    },
+  ];
   const dispatch = useDispatch();
   const selector = (state) => {
     return {
-      userName: state.User.userName,
-      applyPass: state.Device.applyPass,
-      account: state.Login.account,
+      editRes: state.Device.editRes,
     };
   };
-  const { userName, applyPass, account } = useSelector(selector);
-  
+  const { editRes } = useSelector(selector);
+
   const handleNoteChange = (e) => {
     setNote(e.target.value);
   };
@@ -58,27 +83,30 @@ export default function EditFormPage(props) {
   const handleRentChange = (e) => {
     setRent(e.target.value);
   };
+  const handleTypeChange = (e) => {
+    setEditType(e.target.value);
+  };
   const handleSubmit = async () => {
-    console.log("1");
+    await dispatch(EditDevice(id, title, note, editType, rent));
+    setSuccessOpen(true);
+    setDisabled(true);
+    setOpen(false);
+    setRefresh(true)
   };
 
-  useEffect(() => {
-    let result = applyPass;
-    if (result === "true") {
-      setLoading(false);
-      setSuccessOpen(true);
-      setDisabled(true);
-      setOpen(false);
-      
-    } else if (result === "器材已被租借") {
-      setFailOpen(true);
-    }
-  }, [applyPass]);
+
   useEffect(() => {
     if (note && title && editType && rent) {
       setDisabled(false);
     }
   });
+
+  useEffect(() => {
+    if(editRes === "true") {
+      setSuccessOpen(true);
+      setOpen(false);
+    }
+  }, [editRes])
 
   const handleSuccessClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -86,6 +114,7 @@ export default function EditFormPage(props) {
     }
     setSuccessOpen(false);
   };
+
 
   const handleFailClose = (event, reason) => {
     if (reason === "clickaway") {
@@ -119,21 +148,6 @@ export default function EditFormPage(props) {
           >
             编辑信息
           </Typography>
-          {/* <Box
-            component="form"
-            sx={{
-              "& .MuiTextField-root": { m: 2, width: "45ch" },
-            }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              disabled
-              id="outlined-disabled"
-              label="姓名"
-              defaultValue={userName}
-            />
-          </Box> */}
           <FormInput
             label="名称"
             value={title}
@@ -146,6 +160,13 @@ export default function EditFormPage(props) {
             placeholder="请输入租金"
             onChange={handleRentChange}
           ></FormInput>
+          <FormSelect
+            label="类别"
+            value={editType}
+            placeholder="请选择类别"
+            onChange={handleTypeChange}
+            menuList={menuList}
+          ></FormSelect>
           <FormMultilineInput
             label="备注"
             value={note}

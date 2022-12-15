@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import LoginContainer from "../../../components/LoginContainer";
-import { Box, Card, Typography, Button } from "@mui/material";
+import { Box, Card, Typography, Button, InputAdornment } from "@mui/material";
 import Background from "../../../assets/loginBodyBcground.jpeg";
 import LoginNameInput from "../../../components/LoginNameInput";
 import LoginPasswdInput from "../../../components/LoginPasswdInput";
@@ -11,30 +11,41 @@ import { LoadingButton } from "@mui/lab";
 import { spacing } from "@mui/system";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import "./body.css"
+import "./body.css";
 import { Grid, Backdrop } from "@mui/material";
+import { loginFailedClear } from "../../../actions/LoginAction";
+import SuccessAlert from "../../../components/Alert/SuccessAlert";
+import FailedAlert from "../../../components/Alert/FailedAlert";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import FormGroup from "@mui/material/FormGroup";
+
 export default function NormalLogin() {
   const [name, setName] = useState();
   const [password, setPassword] = useState();
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [failOpen, setFailOpen] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const selector = (state) => {
     return {
-      // ifFirst: state.Login.ifFirst,
-      // errMsg: state.Login.errorMsg,
+      errMsg: state.Login.errorMsg,
       isAuthenticated: state.Login.isAuthenticated,
+      firstLogin: state.Login.ifFirst,
     };
   };
-  const { isAuthenticated } = useSelector(selector);
+  const { errMsg, isAuthenticated, firstLogin } = useSelector(selector);
   const bcgStyle = {
     position: "relative",
     width: "100%",
     height: "723px",
     backgroundImage: `url(${Background})`,
-    backgroundSize:"cover",
-		backgroundAttachment: "fixed",
+    backgroundSize: "cover",
+    backgroundAttachment: "fixed",
   };
   const outContainerStyle = {
     display: "flex",
@@ -51,35 +62,57 @@ export default function NormalLogin() {
   };
   useEffect(() => {
     handleLogin();
+    return () => {
+      dispatch(loginFailedClear());
+    };
   }, [isAuthenticated]);
   useEffect(() => {
     if (name && password) {
       setDisabled(false);
     }
   });
+
   const handleLogin = () => {
     if (isAuthenticated) {
-      console.log("success")
-      navigate("/hit/auth/index");
+      console.log(firstLogin);
+      if (firstLogin) {
+        navigate("/hit/firstLogin");
+      } else {
+        navigate("/hit/auth/index");
+      }
     }
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (name && password) {
-      //var remember_flag = rememberMe && cookieSet() ? "on" : "off";
+      var remember_flag = rememberMe ? "on" : "off";
       setLoading(true);
       await dispatch(
         login({
           username: name,
           password: password,
-          //remember_flag: remember_flag,
+          remember_me: remember_flag,
         })
       );
       setLoading(false);
     }
-    // if (recaptchaAlert) {
-    //   setCaptcha(false);
-    // }
+    if (errMsg !== null) {
+      setFailOpen(true);
+    }
+  };
+
+  const handleSuccessClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
+  const handleFailClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFailOpen(false);
   };
   return (
     <Box style={bcgStyle}>
@@ -128,12 +161,14 @@ export default function NormalLogin() {
                 }}
               ></LoginNameInput>
             </Box>
-            <div>
+            <Box>
               <LoginPasswdInput
                 id="login-name-input"
                 label="密码"
                 placeholder="请输入密码"
                 value={password}
+                type={showPassword ? "text" : "password"}
+                position="absolute"
                 onChange={(e) => {
                   var value = e.target.value;
                   var strlist = value.split(" ");
@@ -145,9 +180,24 @@ export default function NormalLogin() {
                     setPassword(value);
                   }
                 }}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}               
               ></LoginPasswdInput>
-            </div>
-
+            </Box>
+            <Box display="flex" width="100%" justifyContent="center" mb={1}>
+              <FormGroup>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      onClick={() => {
+                        setRememberMe(!rememberMe);
+                      }}
+                    />
+                  }
+                  label="Remember me"
+                />
+              </FormGroup>
+            </Box>
             <Box display="flex" width="100%" justifyContent="center" mb={1}>
               <LoadingButton
                 id="basicLoginPageLoginLoadingButton"
@@ -164,13 +214,19 @@ export default function NormalLogin() {
                 登录
               </LoadingButton>
             </Box>
-            <Box sx={{ "& button": { m: 1 } }} spacing={2}>
-              <Button href="#">注册账号</Button>
-              <Button href="#">找回密码</Button>
-            </Box>
           </Box>
         </form>
       </Card>
+      <SuccessAlert
+        open={successOpen}
+        handleClose={handleSuccessClose}
+        message="提交成功"
+      ></SuccessAlert>
+      <FailedAlert
+        open={failOpen}
+        handleClose={handleFailClose}
+        message={errMsg}
+      ></FailedAlert>
     </Box>
   );
 }

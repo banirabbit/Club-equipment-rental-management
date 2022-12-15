@@ -1,3 +1,4 @@
+import { datePickerToolbarClasses } from "@mui/x-date-pickers";
 import * as actions from "../actions/DeviceAction";
 
 const initState = {
@@ -7,6 +8,9 @@ const initState = {
   equipId: 0,
   createDevice: null,
   changeStatus: null,
+  search: "",
+  editRes: "",
+  count: 0,
 };
 
 export default function DeviceReducer(state = initState, action) {
@@ -18,9 +22,11 @@ export default function DeviceReducer(state = initState, action) {
         deviceInfo: data,
       };
     case actions.SET_DEVICELIST:
+      console.log(data, "88888888888888888888")
       return {
         ...state,
-        deviceList: data,
+        deviceList: data.result,
+        count: data.count,
       };
     case action.GET_APPLY:
       return {
@@ -41,6 +47,16 @@ export default function DeviceReducer(state = initState, action) {
       return {
         ...state,
         changeStatus: data,
+      }
+    case action.SEARCH_DEVICE:
+      return {
+        ...state,
+        search: data,
+      }
+    case action.EDIT_DEVICE:
+      return {
+        ...state,
+        editRes: data,
       }
     default:
       return state;

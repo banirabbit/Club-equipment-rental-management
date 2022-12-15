@@ -17,9 +17,10 @@ import FailedAlert from "../../components/Alert/FailedAlert";
 import { handleApply } from "../../actions/DeviceAction";
 import { Backdrop } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { getUserInfo } from "../../actions/UserAction";
 export default function FormPage(props) {
-  const { open, setOpen, setRefresh, handleClose, id, status } = props;
-  const [date, setDate] = useState(dayjs());
+  const { open, setOpen, setRefresh, id, status } = props;
+  const [date, setDate] = useState(dayjs().add(1, 'day'));
   const [phone, setPhone] = useState();
   const [ways, setWays] = useState();
   const [successOpen, setSuccessOpen] = useState(false);
@@ -35,6 +36,9 @@ export default function FormPage(props) {
     };
   };
   const { userName, applyPass, account } = useSelector(selector);
+  useEffect(() => {
+    dispatch(getUserInfo());
+  }, [dispatch]);
   const handleDateChange = (value) => {
     setDate(value);
   };
@@ -45,7 +49,7 @@ export default function FormPage(props) {
     setWays(e.target.value);
   };
   const handleSubmit = async () => {
-    await dispatch(handleApply(id, account, userName, phone, ways));
+    await dispatch(handleApply(id, account, date, userName, phone, ways));
     setSuccessOpen(true);
     isClear();
     setDisabled(true);
@@ -63,6 +67,8 @@ export default function FormPage(props) {
       isClear();
     } else if (result === "器材已被租借") {
       setFailOpen(true);
+    } else if(result === "error") {
+      setFailOpen(true);
     }
   }, [applyPass]);
   useEffect(() => {
@@ -70,9 +76,15 @@ export default function FormPage(props) {
       setDisabled(false);
     }
   });
+
+  const handleClose = () => {
+    setOpen(false);
+    isClear();
+  };
   const isClear = () => {
     setPhone("");
     setWays("");
+    setDate(dayjs().add(1, 'day'));
   };
 
   const handleSuccessClose = (event, reason) => {

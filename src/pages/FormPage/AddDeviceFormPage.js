@@ -14,6 +14,7 @@ import FormSelect from "../../components/FormSelect/FormSelect";
 import { useEffect } from "react";
 import SuccessAlert from "../../components/Alert/SuccessAlert";
 import FailedAlert from "../../components/Alert/FailedAlert";
+import FormMultilineInput from "../../components/FormMultilineInput/FormMultilineInput";
 export default function AddDeviceFormPage(props) {
   const { setJump } = props;
   const [name, setName] = useState();
@@ -155,13 +156,7 @@ export default function AddDeviceFormPage(props) {
             value={name}
             placeholder="请输入器材名称"
             onChange={handleNameChange}
-          ></FormInput>
-          <FormInput
-            label="备注"
-            value={ways}
-            placeholder="请输入备注"
-            onChange={handleWaysChange}
-          ></FormInput>
+          ></FormInput>        
           <FormSelect
             label="类别"
             value={category}
@@ -175,6 +170,12 @@ export default function AddDeviceFormPage(props) {
             placeholder="请输入押金"
             onChange={handleRentChange}
           ></FormInput>
+          <FormMultilineInput
+            label="备注"
+            value={ways}
+            placeholder="请输入备注"
+            onChange={handleWaysChange}
+          ></FormMultilineInput>
           <Box display="flex" width="100%" justifyContent="center" mb={1}>
             <LoadingButton
               id="basicLoginPageLoginLoadingButton"

@@ -23,6 +23,7 @@ export default function FormMultilineInput(props) {
     >
       <TextField
         id="outlined-multiline-static"
+        required
         multiline
         rows={4}
         label={label}

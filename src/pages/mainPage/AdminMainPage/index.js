@@ -104,6 +104,7 @@ export default function AdminMainPage() {
   const menuActions = React.useRef(null);
   const preventReopen = React.useRef(false);
   const [type, setType] = React.useState("");
+  const [search, setSearch] = React.useState("");
   const handleCreatePageOpen = (event) => {
     if (preventReopen.current) {
       event.preventDefault();
@@ -152,7 +153,7 @@ export default function AdminMainPage() {
 
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
-      <Header isAdmin={true}></Header>
+      <Header isAdmin={true} search={search} setSearch={setSearch} type={type}></Header>
       <Grid
         item
         xs={12}
@@ -238,7 +239,7 @@ export default function AdminMainPage() {
                 </StyledMenuItem>
               </MenuUnstyled>
               <TabPanel value="1" overFlow="hidden">
-                <AdminOverview type={type} setType={setType}></AdminOverview>
+                <AdminOverview type={type} setType={setType} search={search}></AdminOverview>
               </TabPanel>
               <TabPanel value="2"><ViewDevice type={type}></ViewDevice></TabPanel>
               <TabPanel value="3">

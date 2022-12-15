@@ -16,35 +16,46 @@ import { getDeviceList, getEquipId } from "../../../actions/DeviceAction";
 import { Fab } from "@mui/material";
 import ViewDevice from "../AdminMainPage/ViewDevice";
 import FormPage from "../../FormPage/FormPage";
+import TipsPage from "../../FormPage/TipsPage";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 export default function UserOverview(props) {
-  const {type, setType} = props
+  const { type, setType, search } = props;
   const [open, setOpen] = useState(false);
+  const [tipsOpen, setTipsOpen] = useState(false);
   const [id, setId] = useState(0);
+  const [page, setPage] = useState(1);
   const selector = (state) => {
     return {
       deviceList: state.Device.deviceList,
+      borrowed: state.User.borrowed,
+      userLimited: state.User.userLimited,
+      count: state.Device.count,
     };
   };
-  const { deviceList } = useSelector(selector);
+  const { deviceList, borrowed, userLimited, count } = useSelector(selector);
   const [refresh, setRefresh] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getUserInfo());
   }, [dispatch]);
+
   useEffect(() => {
     if (refresh) {
-      setType("");
-      dispatch(getDeviceList(type));
+      setType("");     
+      dispatch(getDeviceList(search, type, page));
       setRefresh(false);
     }
-    console.log(id);
   });
   const handleRefresh = () => {
     setRefresh(true);
   };
   useEffect(() => {
-    dispatch(getDeviceList(type));
-  }, [type])
+    dispatch(getDeviceList(search, type, page));
+  }, [search]);
+  useEffect(() => {
+    dispatch(getDeviceList(search, type, page));
+  }, [type]);
   const useStyles = makeStyles((theme) => ({
     gameEntry: {
       // 2 items on [0, sm]
@@ -63,11 +74,25 @@ export default function UserOverview(props) {
   }));
 
   const handleRent = (id) => {
-    setId(Number(id));
-    setOpen(true);
+    if (Number(borrowed) >= Number(userLimited)) {
+      setTipsOpen(true);
+    } else {
+      setId(Number(id));
+      setOpen(true);
+    }
   };
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleTipsClose = () => {
+    setTipsOpen(false);
+  };
+
+  const handlePageChange = (_event, value) => {
+    setPage(value)
+    console.log(value, "pppp");
+    dispatch(getDeviceList(search, type, value));
   };
   return (
     <div>
@@ -160,7 +185,26 @@ export default function UserOverview(props) {
           </Grid>
         ))}
       </Grid>
-      <FormPage open={open} setOpen={setOpen} handleClose={handleClose} setRefresh={setRefresh} id={id}></FormPage>
+      <Stack
+        sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center", width: "100%",marginTop: "40px" }}
+        container
+        spacing={2}
+        textAlign="center"
+      >
+        <Pagination count={Math.ceil(Number(count)/20)} page={page} onChange={handlePageChange} variant="outlined" color="primary" />
+      </Stack>
+      <FormPage
+        open={open}
+        setOpen={setOpen}
+        handleClose={handleClose}
+        setRefresh={setRefresh}
+        id={id}
+      ></FormPage>
+      <TipsPage
+        open={tipsOpen}
+        setOpen={setTipsOpen}
+        handleClose={handleTipsClose}
+      ></TipsPage>
       <Tooltip title="刷新数据">
         <Fab
           size="medium"
@@ -168,10 +212,10 @@ export default function UserOverview(props) {
           aria-label="refresh"
           onClick={handleRefresh}
           sx={{
-            position: 'fixed',
+            position: "fixed",
             bottom: 80,
             left: 28,
-            zIndex: 1101
+            zIndex: 1101,
           }}
         >
           <RefreshIcon />

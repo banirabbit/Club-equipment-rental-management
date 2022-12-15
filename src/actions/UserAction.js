@@ -3,6 +3,7 @@ import { setErrorSnackbarMessageAndOpen } from "./SnackbarAction";
 export const GET_USER_INFO = "GET_USER_INFO";
 export const CREATE_USER = "CREATE_USER";
 export const SET_USERLIST = "SET_USERLIST";
+export const GET_DELETE = "GET_DELETE";
 
 //Get user information
 export function getUserInfo() {
@@ -13,8 +14,8 @@ export function getUserInfo() {
             authorization: localStorage.getItem("authorization"),
           },
         });
-        console.log(result, "22222");
         localStorage.setItem("userInfo", result.data); // 储存到local里面减少网络请求
+        console.log(result.data, "3333")
         dispatch({ type: GET_USER_INFO, data: result.data });
       } catch (err) {
         console.log("failed");
@@ -84,3 +85,32 @@ export function getUserList() {
     }
   };
 }
+
+export function DeleteUser(account) {
+  return async (dispatch) => {
+    try {
+      let url = "/user/deleteNormalUser";
+      const result = await axios_instance.get(
+        url,
+        {
+          params: {
+            account: account
+          },
+          headers: {
+            Authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+      if (result.data.code === 200) {
+        dispatch({ type: GET_DELETE, data: "true" });
+      } else {
+        if (result.data.code === 500) {
+          dispatch({ type: GET_DELETE, data: "error" });
+      }
+    }
+    } catch (err) {
+      dispatch({ type: GET_DELETE, data: err.response.data.msg });
+    }
+  };
+}
+

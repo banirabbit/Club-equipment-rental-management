@@ -15,6 +15,7 @@ import MenuItemUnstyled, {
 import PopperUnstyled from "@mui/base/PopperUnstyled";
 import { styled, alpha } from "@mui/material/styles";
 import ViewUserDevice from "./ViewUserDevice";
+import HelpPage from "../HelpPage/HelpPage";
 
 const blue = {
   100: "#DAECFF",
@@ -103,6 +104,7 @@ export default function UserMainPage() {
   const menuActions = React.useRef(null);
   const preventReopen = React.useRef(false);
   const [type, setType] = React.useState("");
+  const [search, setSearch] = React.useState("");
   const handleCreatePageOpen = (event) => {
     if (preventReopen.current) {
       event.preventDefault();
@@ -151,7 +153,7 @@ export default function UserMainPage() {
 
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
-      <Header isAdmin={false}></Header>
+      <Header isAdmin={false} search={search} setSearch={setSearch} type={type}></Header>
       <Grid
         item
         xs={12}
@@ -237,10 +239,11 @@ export default function UserMainPage() {
                 </StyledMenuItem>
               </MenuUnstyled>
               <TabPanel value="1" overFlow="hidden">
-                <UserOverview type={type} setType={setType}></UserOverview>
+                <UserOverview type={type} setType={setType} search={search}></UserOverview>
               </TabPanel>
               <TabPanel value="2"></TabPanel>
-              <TabPanel value="3">     
+              <TabPanel value="3">  
+              <HelpPage></HelpPage>   
               </TabPanel>
               <TabPanel value="4">
                 <ViewUserDevice></ViewUserDevice>

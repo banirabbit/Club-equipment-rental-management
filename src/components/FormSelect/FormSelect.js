@@ -13,7 +13,7 @@ export default function FormSelect(props) {
       noValidate
       autoComplete="off"
     >
-      <FormControl sx={{ m: 2, minWidth: 120, width: "45ch" }}>
+      <FormControl required sx={{ m: 2, minWidth: 120, width: "45ch" }}>
         <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
         <Select
           labelId="demo-simple-select-helper-label"

@@ -1,13 +1,16 @@
 import * as actions from "../actions/UserAction";
 
 const initState = {
-  userImage: "",
-  userName: "",
-  userRole: "",
-  userId: "",
-  userLimited: "",
+  userImage: localStorage.getItem("userInfo")?.userImage ?? "",
+  userName: localStorage.getItem("userInfo")?.userName ?? "", 
+  userRole: localStorage.getItem("userInfo")?.userRole ?? "",
+  userId: localStorage.getItem("userInfo")?.userId ?? "",
+  userLimited: localStorage.getItem("userInfo")?.userLimited ?? "",
+  borrowed: localStorage.getItem("userInfo")?.borrowed ?? 0,
   createUserResult: "",
   userList: [],
+  firstLogin: "",
+  deleteRes: "",
 };
 
 export default function UserReducer(state = initState, action) {
@@ -21,6 +24,8 @@ export default function UserReducer(state = initState, action) {
         userRole: data.userRole,
         userId: data.userId,
         userLimited: data.userLimited,
+        borrowed: data.borrowed,
+        firstLogin: data.firstLogin,
       };
     case actions.CREATE_USER:
       return {
@@ -31,6 +36,11 @@ export default function UserReducer(state = initState, action) {
       return {
         ...state,
         userList: data,
+      }
+    case actions.GET_DELETE:
+      return {
+        ...state,
+        deleteRes: data,
       }
     default:
       return state;

@@ -29,6 +29,8 @@ export default function AddUserFormPage(props) {
   useEffect(() => {
     if (id) {
       setDisabled(false);
+    }else {
+      setDisabled(true);
     }
   });
   const handleSubmit = async (id) => {
@@ -54,6 +56,7 @@ export default function AddUserFormPage(props) {
     } else if (result === "EmailExit") {
       setEmailExitError(true);
       setLoading(false);
+      setFailOpen(true);
     } else if (result === "error") {
       setFailOpen(true);
     }

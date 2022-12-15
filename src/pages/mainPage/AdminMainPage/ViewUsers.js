@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./index.css";
 
-import { Card, Grid, IconButton, Typography } from "@mui/material";
+import { Card, Grid, IconButton, Tooltip, Typography } from "@mui/material";
 
 import { makeStyles } from "@mui/styles";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -18,7 +18,10 @@ import { useState } from "react";
 import { getDeviceDetail } from "../../../actions/DeviceAction";
 import { Button } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
-import { getUserList } from "../../../actions/UserAction";
+import { DeleteUser, getUserList } from "../../../actions/UserAction";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import SuccessAlert from "../../../components/Alert/SuccessAlert";
+import FailedAlert from "../../../components/Alert/FailedAlert";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -41,6 +44,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export default function ViewUsers() {
   const [refresh, setRefresh] = useState(true);
+  const [successOpen, setSuccessOpen] = useState(false);
+  const [failOpen, setFailOpen] = useState(false);
 
   const dispatch = useDispatch();
   useEffect(() => {
@@ -53,9 +58,10 @@ export default function ViewUsers() {
     return {
       userList: state.User.userList,
       userId: state.User.userId,
+      deleteRes: state.User.deleteRes,
     };
   };
-  const { userList, userId } = useSelector(selector);
+  const { userList, userId, deleteRes } = useSelector(selector);
   const handleRefresh = () => {
     setRefresh(true);
   };
@@ -73,6 +79,34 @@ export default function ViewUsers() {
     } else {
       return "普通用户";
     }
+  };
+  const handleDeleteUser = async (account) => {
+    await dispatch(DeleteUser(account));
+    console.log(deleteRes, "33333333");
+    setRefresh(true);
+  };
+
+  useEffect(() => {
+    if (deleteRes === "true") {
+      setRefresh(true);
+      setSuccessOpen(true);
+    } else if (deleteRes === "error") {
+      setFailOpen(true);
+    }
+  }, [deleteRes]);
+
+  const handleSuccessClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessOpen(false);
+  };
+
+  const handleFailClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setFailOpen(false);
   };
 
   return (
@@ -106,6 +140,7 @@ export default function ViewUsers() {
                   <StyledTableCell align="right">学号</StyledTableCell>
                   <StyledTableCell align="right">限权</StyledTableCell>
                   <StyledTableCell align="right">未归还</StyledTableCell>
+                  <StyledTableCell align="right">操作</StyledTableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -122,16 +157,42 @@ export default function ViewUsers() {
                     </StyledTableCell>
                     <StyledTableCell align="right">
                       <Typography
-                        color={getStatus(row.status) ? "rgb(207, 78, 58)" : "#000"}
+                        color={
+                          getStatus(row.status) ? "rgb(207, 78, 58)" : "#000"
+                        }
                       >
                         {row.borrowed}
                       </Typography>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {getRole(row.roleId) === "普通用户" &&
+                      !getStatus(row.status) ? (
+                        <Tooltip title="删除用户">
+                          <IconButton
+                            onClick={() => {
+                              handleDeleteUser(row.account);
+                            }}
+                          >
+                            <DeleteOutlineIcon></DeleteOutlineIcon>
+                          </IconButton>
+                        </Tooltip>
+                      ) : null}
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+          <SuccessAlert
+            open={successOpen}
+            handleClose={handleSuccessClose}
+            message="删除成功"
+          ></SuccessAlert>
+          <FailedAlert
+            open={failOpen}
+            handleClose={handleFailClose}
+            message="Some error happened."
+          ></FailedAlert>
         </Grid>
       </Grid>
     </div>

@@ -7,6 +7,18 @@ export const GET_APPLY = "GET_APPLY";
 export const GET_EQUIPID = "GET_EQUIPID";
 export const CREATE_DEVICE = "CREATE_DEVICE";
 export const GET_STATUS = "GET_STATUS";
+export const SEARCH_DEVICE = "SEARCH_DEVICE";
+export const EDIT_DEVICE = "EDIT_DEVICE";
+export function setSearchDevice(search) {
+  return async (dispatch) => {
+    try {
+      dispatch({ type: SEARCH_DEVICE, data: search });
+    } catch (err) {
+      dispatch(setErrorSnackbarMessageAndOpen("nullError", true));
+    }
+  };
+}
+
 export function getDeviceDetail(userId) {
   return async (dispatch) => {
     const res = await axios_instance.get("/log/getPageLogs", {
@@ -27,12 +39,13 @@ export function getDeviceDetail(userId) {
   };
 }
 
-export function getDeviceList(type) {
+export function getDeviceList(title, type, page) {
   return async (dispatch) => {
     const res = await axios_instance.get("/equipment/equipmentPage", {
       params: {
-        pageNum: 1,
-        pageSize: 100,
+        title: title,
+        pageNum: page,
+        pageSize: 20,
         type: type,
       },
       headers: {
@@ -40,14 +53,16 @@ export function getDeviceList(type) {
       },
     });
     if (res.data.code === 200) {
+      console.log(res.data.data.count, "111111111111111111111")
       dispatch({ type: SET_DEVICELIST, data: res.data.data });
+      
     } else {
       dispatch(setErrorSnackbarMessageAndOpen("nullError", true));
     }
   };
 }
 
-export function handleApply(equipmentId, account, name, phoneNumber, purpose) {
+export function handleApply(equipmentId, account, date, name, phoneNumber, purpose) {
   return async (dispatch) => {
     try {
       let url = "/equipment/borrow";
@@ -59,6 +74,7 @@ export function handleApply(equipmentId, account, name, phoneNumber, purpose) {
           name: name,
           phoneNumber: phoneNumber,
           purpose: purpose,
+          expectedTime: date,
         },
         {
           headers: {
@@ -117,7 +133,6 @@ export function createDevice(name, ways, category, rent) {
       } else {
         if (result.data.code === 500) {
           if (result.data.message === "此器材已经存在")
-            //判断是否是邮箱存在错误
             dispatch({ type: CREATE_DEVICE, data: "DeviceExit" });
         } else {
           dispatch({ type: CREATE_DEVICE, data: "error" });
@@ -125,6 +140,39 @@ export function createDevice(name, ways, category, rent) {
       }
     } catch (err) {
       dispatch({ type: CREATE_DEVICE, data: err.response.data.msg });
+    }
+  };
+}
+
+export function EditDevice(id, title, note, type, rent) {
+  return async (dispatch) => {
+    try {
+      let url = "/equipment/editEquipment";
+
+      const result = await axios_instance.post(
+        url,
+        {
+          equipmentId: id,
+          rent: rent,
+          note: note,
+          type: type,
+          title: title,
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("authorization"),
+          },
+        }
+      );
+
+      if (result.data.code === 200) {
+        dispatch({ type: EDIT_DEVICE, data: "true" });
+      } else {
+        
+          dispatch({ type: EDIT_DEVICE, data: "error" });
+      }
+    } catch (err) {
+      dispatch({ type: EDIT_DEVICE, data: err.response.data.msg });
     }
   };
 }

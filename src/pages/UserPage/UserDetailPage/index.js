@@ -9,6 +9,23 @@ import "./index.css";
 import { useSelector } from "react-redux";
 import ImageUrl from "../../../assets/file.jpeg";
 import { Button } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { getUserInfo } from "../../../actions/UserAction";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ImageIcon from "@mui/icons-material/Image";
+import WorkIcon from "@mui/icons-material/Work";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import Divider from "@mui/material/Divider";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
+import CatchingPokemonIcon from "@mui/icons-material/CatchingPokemon";
+import FaceIcon from "@mui/icons-material/Face";
+import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
+import logo from "../../../assets/logo.svg"
 function stringToColor(string) {
   let hash = 0;
   let i;
@@ -39,17 +56,38 @@ function stringAvatar(name) {
 }
 export default function UserDetailPage() {
   const image = ImageUrl;
+  const logoImage = logo;
+  const [search, setSearch] = React.useState("");
   const selector = (state) => {
     return {
-      userName: state.User.userId,
+      userName: state.User.userName,
       account: state.Login.account,
+      userRole: state.User.userRole,
+      borrowed: state.User.borrowed,
+      userLimited: state.User.userLimited,
+      userImage: state.User.userImage,
     };
   };
-  const { userName, account } = useSelector(selector);
+  const { userName, account, userRole, borrowed, userLimited, userImage } =
+    useSelector(selector);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserInfo());
+  }, [dispatch]);
+
+  const getUserRole = () => {
+    if (Number(userRole) === 2) {
+      return "普通用户";
+    } else if (Number(userRole) === 1) {
+      return "管理员";
+    } else {
+      return "游客";
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2} id="body">
-      <Header isAdmin={false}></Header>
+      <Header isAdmin={false} search={search} setSearch={setSearch}></Header>
       <Grid
         textAlign="center"
         item
@@ -70,13 +108,13 @@ export default function UserDetailPage() {
         >
           <Avatar
             sx={{
-              bgcolor: deepOrange[500],
               width: 80,
               height: 80,
               fontSize: "30px",
             }}
+            src={logoImage}
           >
-            U
+            
           </Avatar>
           <Typography color="#fff" marginTop="20px" fontSize="30px">
             {account}
@@ -90,45 +128,85 @@ export default function UserDetailPage() {
           padding="30px"
         >
           <Card>
-            <Grid justifyContent="left" direction="row">
-              <Grid justifyContent="left" direction="column">
-                <Typography margin="20px" display="inline-block">
-                  基础资料
-                </Typography>
-                <Box margin="10px" padding="0 30%" textAlign="left">
-                  <Typography display="inline-block">姓名：</Typography>
-                  <Box display="inline-block" marginLeft="60%">
-                    <Typography>{userName}</Typography>
-                  </Box>
-                </Box>
-                <Box margin="10px" padding="0 30%" textAlign="left">
-                  <Typography display="inline-block">性别：</Typography>
-                  <Box display="inline-block" marginLeft="60%">
-                    <Typography display="inline-block">女</Typography>
-                  </Box>
-                </Box>
-                <Box margin="10px" padding="0 30%" textAlign="left">
-                  <Typography display="inline-block">学号：</Typography>
-                  <Box display="inline-block" marginLeft="60%">
-                    <Typography display="inline-block">{account}</Typography>
-                  </Box>
-                </Box>
-                <Box margin="10px" padding="0 30%" textAlign="left">
-                  <Typography display="inline-block">邮箱：</Typography>
-                  <Box display="inline-block" marginLeft="60%">
-                    <Typography display="inline-block">
-                      123456@qq.com
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box
-                  margin="10px 10px 50px 10px"
-                  padding="0 30%"
-                  textAlign="left"
+            <Grid container padding="40px">
+              <Grid item xs>
+                <List
+                  sx={{
+                    width: "100%",
+                    maxWidth: 400,
+                    bgcolor: "background.paper",
+                  }}
                 >
-                  <Typography display="inline-block">个性签名：</Typography>
-                </Box>
-                <Button variant="text">编辑资料</Button>
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <FaceIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="姓名" secondary={userName} />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <FaceIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="学号" secondary={account} />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <WorkIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="限权" secondary={getUserRole()} />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <CatchingPokemonIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="租借个数" secondary={borrowed} />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <AutoStoriesIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="租借上限" secondary={userLimited} />
+                  </ListItem>
+                  <Divider variant="inset" component="li" />
+                  <ListItem>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <Brightness7Icon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary="个人简介" secondary={userImage} />
+                  </ListItem>
+                </List>
+              </Grid>
+
+              <Divider orientation="vertical" flexItem>
+                个人信息
+              </Divider>
+              <Grid padding="45px 150px 50px 180px">
+                <Avatar
+                  sx={{
+                    width: 350,
+                    height: 350,
+                    fontSize: "30px",
+                  }}
+                  src={image}
+                >
+                  
+                </Avatar>
               </Grid>
             </Grid>
           </Card>

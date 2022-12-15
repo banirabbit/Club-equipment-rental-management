@@ -1,9 +1,25 @@
-import React from 'react'
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import React from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { Icon } from "@mui/material";
+import { IconButton } from "@mui/material";
 
 export default function LoginPasswdInput(props) {
-  const {id, value, placeholder, onChange, error, helperText, label, sx } = props
+  const {
+    id,
+    value,
+    placeholder,
+    onChange,
+    error,
+    helperText,
+    label,
+    sx,
+    type,
+    showPassword,
+    setShowPassword,
+  } = props;
   return (
     <Box
       component="form"
@@ -13,8 +29,8 @@ export default function LoginPasswdInput(props) {
       noValidate
       autoComplete="off"
     >
-      <div>
-      <TextField
+      <div position="relative">
+        <TextField
           id={id}
           placeholder={placeholder}
           onChange={onChange}
@@ -23,9 +39,23 @@ export default function LoginPasswdInput(props) {
           helperText={helperText}
           label={label}
           sx={sx}
-          type="password"
+          type={type}
           autoComplete="current-password"
         />
+        <IconButton
+          data-testid="icon1"
+          id="icon1"
+          name="showPassword"
+          aria-label="toggle password visibility"
+          onClick={() => {
+            setShowPassword(!showPassword);
+          }}
+          style={{ position: "absolute", top: "270px" }}
+        >
+          <Icon>
+            {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+          </Icon>
+        </IconButton>
       </div>
     </Box>
   );

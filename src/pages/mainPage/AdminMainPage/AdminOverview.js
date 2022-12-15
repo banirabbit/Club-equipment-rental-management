@@ -16,8 +16,10 @@ import { getDeviceList, getEquipId } from "../../../actions/DeviceAction";
 import { Fab } from "@mui/material";
 import FormPage from "../../FormPage/FormPage";
 import EditFormPage from "../../FormPage/EditFormPage";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 export default function AdminOverview(props) {
-  const { type, setType } = props;
+  const { type, setType, search } = props;
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
   const [status, setStatus] = useState("");
@@ -26,12 +28,14 @@ export default function AdminOverview(props) {
   const [editType, setEditType] = useState("");
   const [rent, setRent] = useState(0);
   const [title, setTitle] = useState("");
+  
   const selector = (state) => {
     return {
       deviceList: state.Device.deviceList,
+      count: state.Device.count,
     };
   };
-  const { deviceList } = useSelector(selector);
+  const { deviceList, count } = useSelector(selector);
   const [refresh, setRefresh] = useState(true);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -40,14 +44,18 @@ export default function AdminOverview(props) {
   useEffect(() => {
     if (refresh) {
       setType("");
-      dispatch(getDeviceList(type));
+      console.log(search, "44444444444")
+      dispatch(getDeviceList(search, type, page));
       setRefresh(false);
     }
     console.log(id);
   });
 
   useEffect(() => {
-    dispatch(getDeviceList(type));
+    dispatch(getDeviceList(search, type, page));
+  }, [search]);
+  useEffect(() => {
+    dispatch(getDeviceList(search, type, page));
   }, [type]);
   const handleRefresh = () => {
     setRefresh(true);
@@ -74,7 +82,8 @@ export default function AdminOverview(props) {
     setStatus(status);
     setOpen(true);
   };
-  const handleEdit = (note, rent, title, editType) => {
+  const handleEdit = (id, note, rent, title, editType) => {
+    setId(Number(id));
     setEditOpen(true);
     setNote(note);
     setRent(rent);
@@ -87,6 +96,13 @@ export default function AdminOverview(props) {
   const handleEditClose = () => {
     setEditOpen(false);
   }
+  const [page, setPage] = React.useState(1);
+  const handlePageChange = (_event, newPage) => {
+    setPage(newPage);
+    console.log(newPage, "ppppp");
+    dispatch(getDeviceList(search, type, newPage));
+    //setRefresh(true);
+  };
   return (
     <div>
       <Grid
@@ -175,12 +191,20 @@ export default function AdminOverview(props) {
                 handleRent(equip.equipmentId, equip.status);
               }}
               handleEdit={() => {
-                handleEdit(equip.note, equip.rent, equip.title, equip.type);
+                handleEdit(equip.equipmentId, equip.note, equip.rent, equip.title, equip.type);
               }}
             ></CardEntity>
           </Grid>
         ))}
       </Grid>
+      <Stack
+        sx={{ flexGrow: 1, justifyContent: "center", alignItems: "center", width: "100%",marginTop: "40px" }}
+        container
+        spacing={2}
+        textAlign="center"
+      >
+        <Pagination count={Math.ceil(Number(count)/20)} page={page} onChange={handlePageChange} color="primary" />
+      </Stack>
       <FormPage
         open={open}
         setOpen={setOpen}
@@ -189,7 +213,9 @@ export default function AdminOverview(props) {
         status={status}
       ></FormPage>
       <EditFormPage
+        id={id}
         open={editOpen}
+        setOpen={setEditOpen}
         handleEditClose={handleEditClose}
         note={note}
         setNote={setNote}
@@ -199,6 +225,7 @@ export default function AdminOverview(props) {
         setTitle={setTitle}
         editType={editType}
         setEditType={setEditType}
+        setRefresh={setRefresh}
       ></EditFormPage>
       <Tooltip title="刷新数据">
         <Fab
