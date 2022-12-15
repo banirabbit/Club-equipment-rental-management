@@ -81,9 +81,6 @@ export default function UserOverview(props) {
       setOpen(true);
     }
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleTipsClose = () => {
     setTipsOpen(false);
@@ -196,7 +193,6 @@ export default function UserOverview(props) {
       <FormPage
         open={open}
         setOpen={setOpen}
-        handleClose={handleClose}
         setRefresh={setRefresh}
         id={id}
       ></FormPage>
