@@ -144,7 +144,7 @@ export default function UserMainPage() {
 
   const handleChange = (event, newValue) => {
     if (newValue === "2") {
-      console.log(newValue, "4444444")
+      console.log(newValue, "4444444");
       handleCreatePageOpen(event);
     } else {
       setValue(newValue);
@@ -153,103 +153,111 @@ export default function UserMainPage() {
 
   return (
     <Box sx={{ flexGrow: 1 }} container spacing={2}>
-      <Header isAdmin={false} search={search} setSearch={setSearch} type={type}></Header>
+      <Header
+        isAdmin={false}
+        search={search}
+        setSearch={setSearch}
+        type={type}
+      ></Header>
       <Grid
         item
         xs={12}
         direction="column"
         justifyContent="center"
-        width="100%"
+        sx={{
+          "& .MuiTabPanel-root.css-13xfq8m-MuiTabPanel-root": {
+            padding: "0px",
+          },
+        }}
       >
         <Grid
           container
           xs={12}
           direction="row"
-          justifyContent="center"
+          width="100%"
+          padding="0 5%"
+          justifyContent="space-between"
           alignItems="center"
         >
-          <Box width="100%">
-            <Box
-              id="logo"
-              sx={{
-                position: "relative",
-                left: "6.25%",
-              }}
-            >
-              <h1>Lease</h1>
-              <span>办公器材租赁平台</span>
-            </Box>
-            <TabContext value={value}>
-              <Box display="inline-block" position="relative" left="53%">
-                <TabList
-                  value={value}
-                  onChange={handleChange}
-                  textColor="secondary"
-                  indicatorColor="secondary"
-                  aria-label="secondary tabs example"
-                >
-                  <Tab value="1" label="主页" />
-                  <Tab value="2" label="分类" />
-                  <Tab value="3" label="帮助" />
-                  <Tab value="4" label="租借记录" />
-                </TabList>
-              </Box>
-              <MenuUnstyled
-                actions={menuActions}
-                open={isOpen}
-                onClose={close}
-                anchorEl={anchorEl}
-                slots={{ root: Popper, listbox: StyledListbox }}
-                slotProps={{ listbox: { id: "simple-menu" } }}
-              >
-                <StyledMenuItem
-                  onClick={() => {
-                    createHandleMenuClick("camera");
-                  }}
-                >
-                  摄影器材
-                </StyledMenuItem>
-                <StyledMenuItem
-                  onClick={() => {
-                    createHandleMenuClick("experiment");
-                  }}
-                >
-                  实验设备
-                </StyledMenuItem>
-                <StyledMenuItem
-                  onClick={() => {
-                    createHandleMenuClick("book");
-                  }}
-                >
-                  书刊杂志
-                </StyledMenuItem>
-                <StyledMenuItem
-                  onClick={() => {
-                    createHandleMenuClick("computer");
-                  }}
-                >
-                  电子设备
-                </StyledMenuItem>
-                <StyledMenuItem
-                  onClick={() => {
-                    createHandleMenuClick("others");
-                  }}
-                >
-                  其他
-                </StyledMenuItem>
-              </MenuUnstyled>
-              <TabPanel value="1" overFlow="hidden">
-                <UserOverview type={type} setType={setType} search={search}></UserOverview>
-              </TabPanel>
-              <TabPanel value="2"></TabPanel>
-              <TabPanel value="3">  
-              <HelpPage></HelpPage>   
-              </TabPanel>
-              <TabPanel value="4">
-                <ViewUserDevice></ViewUserDevice>
-              </TabPanel>
-            </TabContext>
+          <Box id="logo">
+            <h1>Lease</h1>
+            <span>办公器材租赁平台</span>
           </Box>
+
+          <TabContext value={value}>
+            <Box display="inline-block">
+              <TabList
+                value={value}
+                onChange={handleChange}
+                textColor="secondary"
+                indicatorColor="secondary"
+                aria-label="secondary tabs example"
+              >
+                <Tab value="1" label="主页" />
+                <Tab value="2" label="分类" />
+                <Tab value="3" label="帮助" />
+                <Tab value="4" label="租借记录" />
+              </TabList>
+            </Box>
+            <MenuUnstyled
+              actions={menuActions}
+              open={isOpen}
+              onClose={close}
+              anchorEl={anchorEl}
+              slots={{ root: Popper, listbox: StyledListbox }}
+              slotProps={{ listbox: { id: "simple-menu" } }}
+            >
+              <StyledMenuItem
+                onClick={() => {
+                  createHandleMenuClick("camera");
+                }}
+              >
+                摄影器材
+              </StyledMenuItem>
+              <StyledMenuItem
+                onClick={() => {
+                  createHandleMenuClick("experiment");
+                }}
+              >
+                实验设备
+              </StyledMenuItem>
+              <StyledMenuItem
+                onClick={() => {
+                  createHandleMenuClick("book");
+                }}
+              >
+                书刊杂志
+              </StyledMenuItem>
+              <StyledMenuItem
+                onClick={() => {
+                  createHandleMenuClick("computer");
+                }}
+              >
+                电子设备
+              </StyledMenuItem>
+              <StyledMenuItem
+                onClick={() => {
+                  createHandleMenuClick("others");
+                }}
+              >
+                其他
+              </StyledMenuItem>
+            </MenuUnstyled>
+            <TabPanel value="1" overFlow="hidden">
+              <UserOverview
+                type={type}
+                setType={setType}
+                search={search}
+              ></UserOverview>
+            </TabPanel>
+            <TabPanel value="2"></TabPanel>
+            <TabPanel value="3">
+              <HelpPage></HelpPage>
+            </TabPanel>
+            <TabPanel value="4">
+              <ViewUserDevice></ViewUserDevice>
+            </TabPanel>
+          </TabContext>
         </Grid>
       </Grid>
     </Box>

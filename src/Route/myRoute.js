@@ -13,6 +13,7 @@ import AdminDetailPage from "../pages/UserPage/AdminDetailPage";
 import UserDetailPage from "../pages/UserPage/UserDetailPage";
 import AuthPage from "../pages/AuthPage/AuthPage";
 import FirstLogin from "../pages/LoginPage/FirstLogin/FirstLogin";
+import EmailTemplatePage from "../pages/EmailTemplate";
 export default function MyRoute() {
   function Logined(props) {
     const isLogin = !!(
@@ -43,7 +44,7 @@ export default function MyRoute() {
           <Route path="admin" element={<AdminMainPage />} />
           <Route path="admin/createdevice" element={<AddDeviceFormPage />} />
           <Route path="admin/createuser" element={<AddUserFormPage />} />
-          
+          <Route path="admin/emailTemplate" element={<EmailTemplatePage />} />
         </Route>
       </Route>
     </Routes>

@@ -102,7 +102,7 @@ export default function UserOverview(props) {
         <Card
           id="banner"
           sx={{
-            width: "90%",
+            width: "100%",
             height: "300px",
             display: "flex",
             flexDirection: "row",
@@ -155,21 +155,19 @@ export default function UserOverview(props) {
         container
         marginTop="40px"
         direction="row"
-        justifyContent="left"
+        justifyContent="space-between"
         alignItems="center"
         style={{
           rowGap: "25px",
         }}
-        paddingLeft="5%"
         width="100%"
       >
         {deviceList.map((equip) => (
           <Grid
             className={useStyles.gameEntry}
-            width="350px"
+            width="22%"
             height="360px"
-            marginRight="20px"
-            marginTop="10px"
+            margin="10px 0 20px 0"
           >
             <CardEntity
               equip={equip}
