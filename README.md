@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# 基于React的设备管理系统
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
